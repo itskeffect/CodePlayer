@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <title>
+           Code Player Proj
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="jqueryui/jquery-ui.js"></script>
+        <link href="jqueryui/jquery-ui.css" rel="stylesheet">
+        <style>
+          body{
+              padding: 0;
+              margin: 0;
+              font-family: Arial, Helvetica, sans-serif;
+          }
+          #header{
+              padding: 5px;
+              width: 99%;
+              height: 30px;
+              background-color: #EEEEEE;
+          }
+          #logo{
+              float: left;
+              font-weight: bold;
+              font-size: 120%;
+              padding: 3px 5px;
+          }
+          #buttonContainer{
+              width: 233px;
+              margin: 0 auto;
+          }
+          .toggleButton{
+              float: left;
+              border: 1px solid grey;
+              padding: 6px;
+              border-right: none;
+              font-size: 90%;
+          }
+          #html{
+              border-top-left-radius: 4px;
+              border-bottom-left-radius: 4px;
+          }
+          #output{
+              border-top-right-radius: 4px;
+              border-bottom-right-radius: 4px;
+              border-right: 1px grey solid;
+          }
+          .active{
+              background-color: #E8F2FF;
+          }
+          .high{
+              background-color: grey;
+          }
+          textarea{
+              resize: none;
+              border-top: none;
+              border-color: grey;
+          }
+          .panel{
+              float: left;
+              width: auto;
+              border-left: none;
+          }
+          iframe{
+              border: none !important;
+          }
+          .hide{
+              display: none;
+          }
+        </style>
+    </head>
+    <body>
+     <div id="header">
+         <div id="logo">
+             CodePlayer
+         </div>
+         <div id="buttonContainer">
+             <div class="toggleButton active" id="html">
+                 HTML
+             </div>
+             <div class="toggleButton" id="css">
+                CSS
+            </div>
+            <div class="toggleButton" id="js">
+                JavaScript
+            </div>
+            <div class="toggleButton active" id="output">
+                Output
+            </div>
+         </div>
+     </div>
+     <div id="bodycontainer">
+         <textarea id="htmlpanel" class="panel"><p>Hello World!</p></textarea>
+         <textarea id="csspanel" class="panel hide">p{ color: green;}</textarea>
+         <textarea id="jspanel" class="panel hide">alert("HI");</textarea>
+         <iframe id="output" class="panel"></iframe>
+     </div>
+        <script type="text/javascript">
+            function updateoutput(){
+                $("iframe").contents().find("html").html(
+                    "<html><head><style type='text/css'>"+$("#csspanel").val() +"</style></head><body>" +
+                    $("#htmlpanel").val() + "</body></html>"); 
+               // document.getElementById("output").contentWindow.eval($("#jspanel").val());
+               var ifrm  = document.getElementsByTagName('iframe')[0], // your iframe
+                iwind = ifrm.contentWindow;                         // the iframe's window
+                iwind.eval($("#jspanel").val());                  // re-evaluate function with eval from iframe      
+            }
+            $(".toggleButton").hover(function(){
+                $(this).addClass("high");
+            },function(){
+                $(this).removeClass("high");
+            });
+            $(".toggleButton").click(function(){
+                $(this).toggleClass("active");
+                $(this).removeClass("high");
+                var panelid=$(this).attr("id")+"panel";
+                $("#"+panelid).toggleClass("hide");
+                var noofactivepanels=4-$('.hide').length;
+                $(".panel").width(($(window).width()/noofactivepanels)-10);
+            });
+            $(".panel").height($(window).height()-$("#header").height()-15);
+            $(".panel").width(($(window).width()/2)-10);
+            updateoutput();
+            $("textarea").on('change keyup paste',function(){
+               updateoutput();
+            });
+        </script>
+      </body>
+</html>
